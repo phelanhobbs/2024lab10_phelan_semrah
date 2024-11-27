@@ -13,37 +13,35 @@
 #include "pico/multicore.h"
 #include "pico/cyw43_arch.h"
 
-int count = 0;
-bool on = false;
+#define LED_DELAY_MS 2500
+#define LED_PIN 0
 
 #define MAIN_TASK_PRIORITY      ( tskIDLE_PRIORITY + 1UL )
 #define BLINK_TASK_PRIORITY     ( tskIDLE_PRIORITY + 2UL )
 #define MAIN_TASK_STACK_SIZE configMINIMAL_STACK_SIZE
 #define BLINK_TASK_STACK_SIZE configMINIMAL_STACK_SIZE
 
-void blink_task(__unused void *params) {
-    hard_assert(cyw43_arch_init() == PICO_OK);
-    while (true) {
-        cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, on);
-        if (count++ % 11) on = !on;
-        vTaskDelay(500);
-    }
+// Turn the led on or off.
+void pico_set_led(bool led_status) {
+    gpio_put(LED_PIN, led_status);
 }
 
+
 void main_task(__unused void *params) {
-    xTaskCreate(blink_task, "BlinkThread",
-                BLINK_TASK_STACK_SIZE, NULL, BLINK_TASK_PRIORITY, NULL);
-    char c;
-    while(c = getchar()) {
-        if (c <= 'z' && c >= 'a') putchar(c - 32);
-        else if (c >= 'A' && c <= 'Z') putchar(c + 32);
-        else putchar(c);
+    while (true) {
+        pico_set_led(true);
+        vTaskDelay(pdMS_TO_TICKS(LED_DELAY_MS));
+        pico_set_led(false);
+        vTaskDelay(pdMS_TO_TICKS(LED_DELAY_MS));
     }
 }
 
 int main( void )
 {
     stdio_init_all();
+    gpio_init(LED_PIN);
+    gpio_set_dir(LED_PIN, GPIO_OUT);
+
     const char *rtos_name;
     rtos_name = "FreeRTOS";
     TaskHandle_t task;
