@@ -5,6 +5,7 @@ env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
   PICO_SDK_PATH: /usr/local/share/pico/pico-sdk
+  PICO_EXTRAS_PATH: /usr/local/share/pico/pico-extras
   FREERTOS_KERNEL_PATH: /usr/local/share/pico/FreeRTOS-Kernel
   UNITY_PATH: /usr/local/share/pico/Unity
   OPENOCD_PATH: /usr/share/openocd
