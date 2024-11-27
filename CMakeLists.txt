@@ -30,7 +30,7 @@ endif()
 if(DEFINED ENV{PICO_EXTRAS_PATH})
     set(PICO_EXTRAS_PATH $ENV{PICO_EXTRAS_PATH})
 else()
-    get_filename_component(PICO_EXTRAS_PATH "lib/pico-extras" ABSOLUTE)
+    get_filename_component(PICO_EXTRAS_PATH "${CMAKE_SOURCE_DIR}/lib/pico-extras" ABSOLUTE)
 endif()
 
 # ====================================================================================
